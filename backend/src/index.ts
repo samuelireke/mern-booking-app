@@ -1,9 +1,8 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import "dotenv/config";
-import mongoose from "mongoose";
-import userRoutes from "./routes/user.route";
 import { connectDB } from "./config/db";
+import routes from "./routes";
 
 // check db connection
 connectDB();
@@ -18,8 +17,9 @@ app.get("/api/test", async (req: Request, res: Response) => {
   res.json({ message: "hello from api" });
 });
 
-app.use("/api/users", userRoutes);
-
+for (const [route, handler] of Object.entries(routes)) {
+  app.use(`/api/${route}`, handler);
+}
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
