@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import User from "../models/user.model";
 import jwt from "jsonwebtoken";
@@ -12,7 +13,6 @@ const createToken = (id: string) => {
 
 const registerUser = async (req: Request, res: Response) => {
   try {
-    console.log(req.body);
     let user = await User.findOne({ email: req.body.email });
 
     if (user) {
@@ -36,4 +36,32 @@ const registerUser = async (req: Request, res: Response) => {
   }
 };
 
-export { registerUser };
+// Login user
+const loginUser = async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "Invalid Credentials" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid Credentials" });
+    }
+
+    const token = createToken(user._id);
+
+    res.cookie("auth_token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 24 * 60 * 60,
+    });
+
+    res.status(200).json({ userId: user._id });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+export { registerUser, loginUser };

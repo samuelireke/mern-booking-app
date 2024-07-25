@@ -25,4 +25,16 @@ const validateUser = [
   },
 ];
 
-export default validateUser;
+const validateLogin = [
+  check("email", "Enter a valid email").isEmail(),
+  check("password", "Password is required").notEmpty(),
+  (req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    next();
+  },
+];
+
+export { validateUser, validateLogin };
