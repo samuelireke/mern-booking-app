@@ -16,7 +16,7 @@ const registerUser = async (req: Request, res: Response) => {
     let user = await User.findOne({ email: req.body.email });
 
     if (user) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).send({ message: "User already exists" });
     }
 
     user = new User(req.body);
@@ -29,10 +29,10 @@ const registerUser = async (req: Request, res: Response) => {
       secure: process.env.NODE_ENV === "production",
       maxAge: 24 * 60 * 60,
     });
-    return res.sendStatus(200);
+    return res.status(200).send({ message: "User registration successful" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Something went wrong" });
+    res.status(500).send({ message: "Something went wrong" });
   }
 };
 
@@ -42,12 +42,12 @@ const loginUser = async (req: Request, res: Response) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: "Invalid Credentials" });
+      return res.status(400).send({ message: "Invalid Credentials" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: "Invalid Credentials" });
+      return res.status(400).send({ message: "Invalid Credentials" });
     }
 
     const token = createToken(user._id);
@@ -58,10 +58,10 @@ const loginUser = async (req: Request, res: Response) => {
       maxAge: 24 * 60 * 60,
     });
 
-    res.status(200).json({ userId: user._id });
+    res.status(200).send({ userId: user._id });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Something went wrong" });
+    res.status(500).send({ message: "Something went wrong" });
   }
 };
 export { registerUser, loginUser };
