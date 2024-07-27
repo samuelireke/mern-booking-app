@@ -1,13 +1,19 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import * as apiClient from "../api-client";
 import { useAppContext } from "../contexts/AppContext";
 import { useNavigate } from "react-router-dom";
 import { RegisterFormData } from "../utils/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterFormDataSchema } from "../utils/schemas/authFormSchema";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Register = () => {
+  const queryClient = useQueryClient();
+
+  const [showPassword, setShowPassword] = useState(false);
+
   const navigate = useNavigate();
 
   const { showToast } = useAppContext();
@@ -22,8 +28,9 @@ const Register = () => {
   });
 
   const mutation = useMutation(apiClient.register, {
-    onSuccess: () => {
+    onSuccess: async () => {
       showToast({ message: "Registration successful!", type: "SUCCESS" });
+      await queryClient.invalidateQueries("validateToken");
       navigate("/");
     },
     onError: (error: Error) => {
@@ -34,6 +41,10 @@ const Register = () => {
   const onSubmit = handleSubmit((data) => {
     mutation.mutate(data);
   });
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-5">
@@ -79,7 +90,7 @@ const Register = () => {
           </span>
         )}
       </label>
-      <label className="text-gray-700 text-sm font-bold flex-1">
+      <label className="text-gray-700 text-sm font-bold flex-1 relative">
         Password
         <input
           {...register("password", {
@@ -102,16 +113,22 @@ const Register = () => {
                 "Password must contain at least one special character",
             },
           })}
-          type="password"
+          type={showPassword ? "text" : "password"}
           className="w-full px-2 py-1 text-gray-700 font-normal border rounded border-gray-300 focus:outline focus:border-blue-600"
         />
+        <span
+          className="text-sm items-center py-1 px-2 right-0 justify-around text-gray-500 cursor-pointer absolute"
+          onClick={togglePasswordVisibility}
+        >
+          {showPassword ? <FaEyeSlash /> : <FaEye />}
+        </span>
         {errors.password && (
           <span className="text-red-500 font-medium">
             {errors.password.message}{" "}
           </span>
         )}
       </label>
-      <label className="text-gray-700 text-sm font-bold flex-1">
+      <label className="text-gray-700 text-sm font-bold flex-1 relative">
         Confirm Password
         <input
           {...register("confirmPassword", {
@@ -126,6 +143,12 @@ const Register = () => {
           type="password"
           className="w-full px-2 py-1 text-gray-700 font-normal border rounded border-gray-300 focus:outline focus:border-blue-600"
         />
+        <span
+          className="text-sm items-center py-1 px-2 right-0 justify-around text-gray-500 cursor-pointer absolute"
+          onClick={togglePasswordVisibility}
+        >
+          {showPassword ? <FaEyeSlash /> : <FaEye />}
+        </span>
         {errors.confirmPassword && (
           <span className="text-red-500 font-medium">
             {errors.confirmPassword.message}{" "}

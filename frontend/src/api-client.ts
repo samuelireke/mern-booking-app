@@ -33,13 +33,22 @@ export const signIn = async (formDate: SignInFormData) => {
   return body;
 };
 
+export const signOut = async () => {
+  const response = await fetch(`${API_BASE_URL}/api/auth/logout`, {
+    method: "POST",
+    credentials: "include",
+  });
+  if (!response.ok) {
+    throw new Error("Failed to log out");
+  }
+};
+
 export const validateToken = async () => {
   const response = await fetch(`${API_BASE_URL}/api/auth/validate-token`, {
     method: "GET",
     credentials: "include",
   });
   if (!response.ok) {
-    console.log(response);
     throw new Error("Token invalid");
   }
   return await response.json();

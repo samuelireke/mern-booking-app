@@ -73,7 +73,10 @@ const validateToken = (req: Request, res: Response) => {
 
 // Logout User
 const logoutUser = (req: Request, res: Response) => {
-  // Logic to handle logout
+  res.cookie("auth_token", "", {
+    expires: new Date(0),
+  });
+  res.send();
 };
 
 // Forgot Password
@@ -90,4 +93,4 @@ const resetPassword = (req: Request, res: Response) => {
 const verifyEmail = (req: Request, res: Response) => {
   // Logic to verify email
 };
-export { registerUser, loginUser, validateToken };
+export { registerUser, loginUser, validateToken, logoutUser };

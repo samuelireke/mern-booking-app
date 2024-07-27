@@ -1,13 +1,19 @@
 import { useForm } from "react-hook-form";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import * as apiClient from "../api-client";
 import { SignInFormData } from "../utils/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignInFormDataSchema } from "../utils/schemas/authFormSchema";
 import { useAppContext } from "../contexts/AppContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const SignIn = () => {
+  const queryClient = useQueryClient();
+
+  const [showPassword, setShowPassword] = useState(false);
+
   const { showToast } = useAppContext();
   const navigate = useNavigate();
 
@@ -25,11 +31,9 @@ const SignIn = () => {
 
   const mutation = useMutation(apiClient.signIn, {
     onSuccess: async () => {
-      // 1. show toast
       showToast({ message: "User signed in successfully", type: "SUCCESS" });
-
-      // 2. navigate to the home page
-      //   navigate("/");
+      await queryClient.invalidateQueries("validateToken");
+      navigate("/");
     },
     onError: (error: Error) => {
       // show toast
@@ -40,6 +44,10 @@ const SignIn = () => {
   const onSubmit = handleSubmit((data) => {
     mutation.mutate(data);
   });
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   return (
     <form className="flex flex-col gap-5" onSubmit={onSubmit}>
@@ -57,7 +65,7 @@ const SignIn = () => {
           </span>
         )}
       </label>
-      <label className="text-gray-700 text-sm font-bold flex-1">
+      <label className="text-gray-700 text-sm font-bold flex-1 relative">
         Password
         <input
           {...register("password", {
@@ -80,16 +88,29 @@ const SignIn = () => {
                 "Password must contain at least one special character",
             },
           })}
-          type="password"
+          type={showPassword ? "text" : "password"}
           className="w-full px-2 py-1 text-gray-700 font-normal border rounded border-gray-300 focus:outline focus:border-blue-600"
+          autoComplete="current-password"
         />
+        <span
+          className="text-sm items-center py-1 px-2 right-0 justify-around text-gray-500 cursor-pointer absolute"
+          onClick={togglePasswordVisibility}
+        >
+          {showPassword ? <FaEyeSlash /> : <FaEye />}
+        </span>
         {errors.password && (
           <span className="text-red-500 font-medium">
             {errors.password.message}{" "}
           </span>
         )}
       </label>
-      <span>
+      <span className="flex items-center justify-between">
+        <span className="text-sm">
+          Not Registered?{" "}
+          <Link className="underline" to="/register">
+            Create an account here
+          </Link>
+        </span>
         <button
           type="submit"
           className="bg-blue-600 text-white p-2 font-bold hover:bg-blue-500 text-xl"

@@ -12,6 +12,7 @@ export const useToast = () => {
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
+      pauseOnFocusLoss: false,
       draggable: true,
     };
 
