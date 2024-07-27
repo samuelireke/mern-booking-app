@@ -27,7 +27,7 @@ const registerUser = async (req: Request, res: Response) => {
     res.cookie("auth_token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      maxAge: 24 * 60 * 60,
+      maxAge: 24 * 60 * 60 * 1000, // in milliseconds
     });
     return res.status(200).send({ message: "User registration successful" });
   } catch (error) {
@@ -55,7 +55,7 @@ const loginUser = async (req: Request, res: Response) => {
     res.cookie("auth_token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      maxAge: 24 * 60 * 60,
+      maxAge: 24 * 60 * 60 * 1000,
     });
 
     res.status(200).send({ userId: user._id });

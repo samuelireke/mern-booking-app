@@ -7,3 +7,8 @@ import {
 export type RegisterFormData = z.infer<typeof RegisterFormDataSchema>;
 
 export type SignInFormData = z.infer<typeof SignInFormDataSchema>;
+
+export type ToastMessage = {
+  message: string;
+  type: "SUCCESS" | "ERROR";
+};

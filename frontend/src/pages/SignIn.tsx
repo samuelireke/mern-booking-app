@@ -4,8 +4,13 @@ import * as apiClient from "../api-client";
 import { SignInFormData } from "../utils/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignInFormDataSchema } from "../utils/schemas/authFormSchema";
+import { useAppContext } from "../contexts/AppContext";
+import { useNavigate } from "react-router-dom";
 
 const SignIn = () => {
+  const { showToast } = useAppContext();
+  const navigate = useNavigate();
+
   const {
     register,
     formState: { errors },
@@ -20,12 +25,15 @@ const SignIn = () => {
 
   const mutation = useMutation(apiClient.signIn, {
     onSuccess: async () => {
-      console.log("user signed in successfully");
-      // 1. show taost
+      // 1. show toast
+      showToast({ message: "User signed in successfully", type: "SUCCESS" });
+
       // 2. navigate to the home page
+      //   navigate("/");
     },
     onError: (error: Error) => {
-      // show taost
+      // show toast
+      showToast({ message: error.message, type: "ERROR" });
     },
   });
 
