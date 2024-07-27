@@ -64,4 +64,30 @@ const loginUser = async (req: Request, res: Response) => {
     res.status(500).send({ message: "Something went wrong" });
   }
 };
-export { registerUser, loginUser };
+
+// validate Token
+const validateToken = (req: Request, res: Response) => {
+  if (!req.userId) return res.status(401).send({ message: "Unauthorised" });
+  res.status(200).send({ userId: req.userId });
+};
+
+// Logout User
+const logoutUser = (req: Request, res: Response) => {
+  // Logic to handle logout
+};
+
+// Forgot Password
+const forgotPassword = (req: Request, res: Response) => {
+  // Logic to handle forgot password
+};
+
+// Reset Password
+const resetPassword = (req: Request, res: Response) => {
+  // Logic to reset password
+};
+
+// Verify Email
+const verifyEmail = (req: Request, res: Response) => {
+  // Logic to verify email
+};
+export { registerUser, loginUser, validateToken };

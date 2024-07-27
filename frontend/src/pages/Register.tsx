@@ -1,51 +1,39 @@
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
-import validator from "validator";
 import * as apiClient from "../api-client";
-
-export type RegisterFormData = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-};
+import { useAppContext } from "../contexts/AppContext";
+import { useNavigate } from "react-router-dom";
+import { RegisterFormData } from "../utils/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { RegisterFormDataSchema } from "../utils/schemas/authFormSchema";
 
 const Register = () => {
+  const navigate = useNavigate();
+
+  const { showToast } = useAppContext();
+
   const {
     register,
     watch,
     handleSubmit,
     formState: { errors },
-  } = useForm<RegisterFormData>();
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(RegisterFormDataSchema),
+  });
 
   const mutation = useMutation(apiClient.register, {
     onSuccess: () => {
-      alert("Registration successful!");
+      showToast({ message: "Registration successful!", type: "SUCCESS" });
+      navigate("/");
     },
     onError: (error: Error) => {
-      alert("Registration failed: " + error.message);
+      showToast({ message: error.message, type: "ERROR" });
     },
   });
 
   const onSubmit = handleSubmit((data) => {
     mutation.mutate(data);
   });
-
-  const validatePassword = (value: string) => {
-    if (
-      !validator.isStrongPassword(value, {
-        minLength: 8,
-        minLowercase: 1,
-        minUppercase: 1,
-        minNumbers: 1,
-        minSymbols: 1,
-      })
-    ) {
-      return "Password must contain at least 8 characters, including a mix of uppercase, lowercase, numbers, and symbols.";
-    }
-    return true;
-  };
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-5">
@@ -100,7 +88,19 @@ const Register = () => {
               value: 8,
               message: "Password must be at least 8 characters long",
             },
-            validate: validatePassword,
+            validate: {
+              uppercase: (value) =>
+                /[A-Z]/.test(value) ||
+                "Password must contain at least one uppercase letter",
+              lowercase: (value) =>
+                /[a-z]/.test(value) ||
+                "Password must contain at least one lowercase letter",
+              digit: (value) =>
+                /\d/.test(value) || "Password must contain at least one digit",
+              symbol: (value) =>
+                /[^A-Za-z0-9]/.test(value) ||
+                "Password must contain at least one special character",
+            },
           })}
           type="password"
           className="w-full px-2 py-1 text-gray-700 font-normal border rounded border-gray-300 focus:outline focus:border-blue-600"

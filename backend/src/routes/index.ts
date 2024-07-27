@@ -1,7 +1,7 @@
 import { Router } from "express";
-import userRoutes from "./user.route";
+import authRoutes from "./auth.route";
 
 const routes: { [key: string]: Router } = {
-  users: userRoutes,
+  auth: authRoutes,
 };
 export default routes;

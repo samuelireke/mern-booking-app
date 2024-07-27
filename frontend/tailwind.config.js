@@ -5,7 +5,6 @@ export default {
     extend: {},
     conatiner: {
       padding: {
-        sm: "10rem",
         md: "10rem",
       },
     },
