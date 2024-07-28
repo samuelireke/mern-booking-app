@@ -2,9 +2,13 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import "dotenv/config";
 import { connectDB } from "./config/db";
+import { initCloudinary } from "./config/cloudinary";
 import routes from "./routes";
 import cookieParser from "cookie-parser";
 import path from "path";
+
+// initialise cloudinary
+initCloudinary();
 
 // check db connection
 connectDB();
@@ -29,6 +33,7 @@ app.get("/api/test", async (req: Request, res: Response) => {
 
 for (const [route, handler] of Object.entries(routes)) {
   app.use(`/api/${route}`, handler);
+  // console.log(`/api/${route}`);
 }
 const port = process.env.PORT || 3000;
 

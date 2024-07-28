@@ -2,7 +2,7 @@
 import { NextFunction, Request, Response } from "express";
 import { check, validationResult } from "express-validator";
 
-const validateUser = [
+export const validateUser = [
   check("firstName", "First Name is required").isString(),
   check("lastName", "Last Name is required").isString(),
   check("email", "Enter a valid email").isEmail(),
@@ -25,7 +25,7 @@ const validateUser = [
   },
 ];
 
-const validateLogin = [
+export const validateLogin = [
   check("email", "Enter a valid email").isEmail(),
   check("password", "Password is required").notEmpty(),
   (req: Request, res: Response, next: NextFunction) => {
@@ -36,5 +36,3 @@ const validateLogin = [
     next();
   },
 ];
-
-export { validateUser, validateLogin };
