@@ -4,6 +4,7 @@ import "dotenv/config";
 import { connectDB } from "./config/db";
 import routes from "./routes";
 import cookieParser from "cookie-parser";
+import path from "path";
 
 // check db connection
 connectDB();
@@ -18,6 +19,8 @@ app.use(
     credentials: true,
   })
 );
+
+app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 
 // test api endpoint
 app.get("/api/test", async (req: Request, res: Response) => {
