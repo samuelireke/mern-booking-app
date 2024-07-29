@@ -1,14 +1,12 @@
-import React from "react";
 import { useFormContext } from "react-hook-form";
 import { HotelFormData } from "./ManageHotelForm";
 import StarRating from "./StarRating";
+import TypeSection from "./TypeSection";
 
 const DetailsSection = () => {
   const {
     register,
     formState: { errors },
-    setValue,
-    clearErrors,
   } = useFormContext<HotelFormData>();
   return (
     <div className="flex flex-col gap-4">
@@ -81,20 +79,8 @@ const DetailsSection = () => {
           </span>
         )}
       </label>
-      <label className="text-gray-700 text-sm font-bold max-w-[50%]">
-        <StarRating
-          initialRating={3}
-          onChange={(newRating) => {
-            setValue("starRating", newRating);
-            clearErrors("starRating");
-          }}
-        />
-        {errors.starRating && (
-          <span className="text-red-500 font-medium">
-            {errors.starRating.message}{" "}
-          </span>
-        )}
-      </label>
+      <StarRating />
+      <TypeSection />
     </div>
   );
 };
