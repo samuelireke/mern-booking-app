@@ -34,7 +34,7 @@ const TypeSection = () => {
         ))}
       </div>
       {errors.type && (
-        <span className="text-red-500 text-sm fon-bold">
+        <span className="text-red-500 text-sm font-medium">
           {errors.type.message}
         </span>
       )}

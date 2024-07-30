@@ -12,9 +12,9 @@ const StarRating = () => {
     formState: { errors },
   } = useFormContext<HotelFormData>();
 
-  const ratingValue = watch("starRating") || 0;
+  const ratingValue = watch("starRating");
 
-  const [hover, setHover] = useState(0);
+  const [hover, setHover] = useState(0); // default to 0
 
   return (
     <div>
@@ -43,9 +43,11 @@ const StarRating = () => {
             />
           </div>
         ))}
-        <span className="ml-2 text-sm text-gray-600">
-          ({getValues("starRating")})
-        </span>
+        {ratingValue && (
+          <span className="ml-2 text-sm text-gray-600">
+            ({getValues("starRating")})
+          </span>
+        )}
       </label>
       {errors.starRating && (
         <span className="text-red-500 font-medium">

@@ -1,7 +1,6 @@
 import { useFormContext } from "react-hook-form";
 import { HotelFormData } from "./ManageHotelForm";
 import StarRating from "./StarRating";
-import TypeSection from "./TypeSection";
 
 const DetailsSection = () => {
   const {
@@ -80,7 +79,6 @@ const DetailsSection = () => {
         )}
       </label>
       <StarRating />
-      <TypeSection />
     </div>
   );
 };
