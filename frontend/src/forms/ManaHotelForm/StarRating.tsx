@@ -8,51 +8,52 @@ const StarRating = () => {
     register,
     watch,
     setValue,
-    getValues,
     formState: { errors },
   } = useFormContext<HotelFormData>();
 
   const ratingValue = watch("starRating");
-
-  const [hover, setHover] = useState(0); // default to 0
+  const [hover, setHover] = useState<number | null>(null);
 
   return (
-    <div>
-      <p className="mr-2 mb-2 text-gray-700 text-sm font-bold">Star Rating</p>
-      <label className="flex items-center gap-5 text-gray-700 text-sm font-bold ">
+    <div className="space-y-2">
+      <label className="block text-sm font-medium text-gray-700">
+        Star Rating
+      </label>
+      <div className="flex items-center space-x-1">
         {[1, 2, 3, 4, 5].map((index) => (
-          <div
+          <button
             key={index}
-            className=""
-            {...register("starRating", {
-              required: "This field is required",
-            })}
+            type="button"
+            className="focus:outline-none focus:text-yellow-400 rounded-full p-1 transition-colors duration-200"
+            onClick={() =>
+              setValue("starRating", index, { shouldValidate: true })
+            }
+            onMouseEnter={() => setHover(index)}
+            onMouseLeave={() => setHover(null)}
+            aria-label={`Rate ${index} star${index !== 1 ? "s" : ""}`}
           >
             <FaStar
-              className={`text-lg md:text-2xl cursor-pointer outline-none ${
-                index <= (hover || ratingValue)
+              className={`w-8 h-8 ${
+                index <= (hover ?? ratingValue ?? 0)
                   ? "text-yellow-400"
-                  : "text-gray-400"
+                  : "text-gray-300"
               }`}
-              onClick={() => setValue("starRating", index)}
-              onMouseEnter={() => setHover(index)}
-              onMouseLeave={() => setHover(0)}
-              aria-label={`Rate ${index} stars out of 5`}
-              role="button"
-              tabIndex={0}
             />
-          </div>
+          </button>
         ))}
         {ratingValue && (
-          <span className="ml-2 text-sm text-gray-600">
-            ({getValues("starRating")})
-          </span>
+          <span className="ml-2 text-sm text-gray-600">({ratingValue})</span>
         )}
-      </label>
+      </div>
+      <input
+        type="number"
+        className="hidden"
+        {...register("starRating", {
+          required: "Please select a star rating",
+        })}
+      />
       {errors.starRating && (
-        <span className="text-red-500 font-medium">
-          {errors.starRating.message}{" "}
-        </span>
+        <p className="text-sm text-red-600 mt-1">{errors.starRating.message}</p>
       )}
     </div>
   );
