@@ -23,7 +23,7 @@ const ManageHotelForm = () => {
   const formMethods = useForm<HotelFormData>();
   return (
     <FormProvider {...formMethods}>
-      <form className="flex flex-col gap-10 p-10">
+      <form className="flex flex-col gap-10 p-5 sm:p-10">
         <DetailsSection />
         <TypeSection />
         <FacilitiesSection />
