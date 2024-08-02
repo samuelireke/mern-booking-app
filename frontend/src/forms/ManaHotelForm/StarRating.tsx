@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { FaStar } from "react-icons/fa";
-import { HotelFormData } from "./ManageHotelForm";
+import { HotelFormData } from "../../utils/types";
 
 const StarRating = () => {
   const {
