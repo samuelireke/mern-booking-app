@@ -7,6 +7,7 @@ import ImagesSection from "./ImagesSection";
 import { HotelFormDataSchema } from "../../utils/schemas/hotelFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HotelFormData } from "../../utils/types";
+import { useEffect } from "react";
 
 type Props = {
   onSave: (hotelFormData: FormData) => void;
@@ -26,8 +27,10 @@ const ManageHotelForm = ({ onSave, isLoading }: Props) => {
   });
   const {
     handleSubmit,
-    // formState: { isValid, isDirty },
+    reset,
+    formState: { isSubmitSuccessful },
   } = formMethods;
+
   const onSubmit = handleSubmit((formDataJson: HotelFormData) => {
     console.log(formDataJson);
 
@@ -50,9 +53,17 @@ const ManageHotelForm = ({ onSave, isLoading }: Props) => {
     Array.from(formDataJson.imageFiles).forEach((imageFile) => {
       formData.append("imageFiles", imageFile);
     });
+    console.log(isSubmitSuccessful);
 
     onSave(formData);
   });
+
+  // clear form input after successful submission
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset();
+    }
+  }, [isSubmitSuccessful]);
 
   return (
     <FormProvider {...formMethods}>

@@ -58,12 +58,8 @@ test("should allow user to add a hotel", async ({ page }) => {
   // select all facilities
   for (const facility of validHotelInput.facilities) {
     await page.getByLabel(facility).check();
-    await page.waitForTimeout(100); // Small delay between checks
+    await page.waitForTimeout(100); // adding small delay between checks
   }
-  //   validHotelInput.facilities.map(async (facility) => {
-  //     await page.getByLabel(facility).click();
-  //     await page.waitForLoadState("networkidle");
-  //   });
   await page.locator('[name="adultCount"]').fill(validHotelInput.adultCount);
   await page.locator('[name="childCount"]').fill(validHotelInput.childCount);
 
@@ -78,4 +74,48 @@ test("should allow user to add a hotel", async ({ page }) => {
   await page.getByRole("button", { name: "Save" }).click();
 
   await expect(page.getByText("Hotel Saved")).toBeVisible();
+});
+
+test("should display hotels", async ({ page }) => {
+  await page.goto(`${UI_URL}/my-hotels`);
+
+  //assert hotel name
+  await expect(
+    page.getByText(validHotelInput.name, { exact: true })
+  ).toBeVisible();
+  //assert hotel description
+  await expect(
+    page.getByText(validHotelInput.description, { exact: true })
+  ).toBeVisible();
+  //assert hotel city and country
+  await expect(page.getByText(validHotelInput.city)).toBeVisible();
+  await expect(page.getByText(validHotelInput.country)).toBeVisible();
+  //assert hotel price per night
+  await expect(
+    page.getByText(`£${validHotelInput.pricePerNight} per night`, {
+      exact: true,
+    })
+  ).toBeVisible();
+  //assert hotel star rating
+  await expect(
+    page.getByText(`${validHotelInput.starRating} Star Rating`, { exact: true })
+  ).toBeVisible();
+  //assert Links
+  await expect(page.getByRole("link", { name: "View Details" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Add Hotel" })).toBeVisible();
+});
+
+test("should redirect user to add hotel page when Add Hotel Link in My Hotels page is clicked", async ({
+  page,
+}) => {
+  await page.goto(`${UI_URL}/my-hotels`);
+
+  // click add hotel link
+  await page.getByRole("link", { name: "Add Hotel" }).click();
+
+  // assert Add Hotel title, Name and City input field and Save button are all visible
+  await expect(page.getByText("Add Hotel")).toBeVisible();
+  await expect(page.getByLabel("Name")).toBeVisible();
+  await expect(page.getByLabel("City")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Save" })).toBeVisible();
 });
