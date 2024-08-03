@@ -22,11 +22,7 @@ const FacilitiesSection = () => {
                 type="checkbox"
                 value={facility}
                 className="form-checkbox h-4 w-4 text-blue-600 rounded-full mr-2"
-                {...register("facilities", {
-                  validate: (facilities) =>
-                    (facilities && facilities.length > 0) ||
-                    "At least one facility must be selected.",
-                })}
+                {...register("facilities")}
               />
               <span className="text-sm text-gray-700">{facility}</span>
             </label>
@@ -34,7 +30,7 @@ const FacilitiesSection = () => {
         </div>
       </div>
       {errors.facilities && (
-        <p className="text-sm text-red-600 mt-2">{errors.facilities.message}</p>
+        <p className="text-xs text-red-500 mt-1">{errors.facilities.message}</p>
       )}
     </div>
   );

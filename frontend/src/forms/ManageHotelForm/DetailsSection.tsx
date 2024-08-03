@@ -23,7 +23,7 @@ const DetailsSection = () => {
           </label>
           <input
             id="name"
-            {...register("name", { required: "Hotel name is required" })}
+            {...register("name")}
             type="text"
             className={inputClass}
           />
@@ -37,7 +37,7 @@ const DetailsSection = () => {
             </label>
             <input
               id="city"
-              {...register("city", { required: "City is required" })}
+              {...register("city")}
               type="text"
               className={inputClass}
             />
@@ -49,7 +49,7 @@ const DetailsSection = () => {
             </label>
             <input
               id="country"
-              {...register("country", { required: "Country is required" })}
+              {...register("country")}
               type="text"
               className={inputClass}
             />
@@ -65,9 +65,7 @@ const DetailsSection = () => {
           </label>
           <textarea
             id="description"
-            {...register("description", {
-              required: "Description is required",
-            })}
+            {...register("description")}
             rows={5}
             className={`${inputClass} resize-vertical`}
           />
@@ -82,10 +80,7 @@ const DetailsSection = () => {
           </label>
           <input
             id="pricePerNight"
-            {...register("pricePerNight", {
-              required: "Price is required",
-              min: { value: 1, message: "Price must be at least 1" },
-            })}
+            {...register("pricePerNight")}
             type="number"
             min={1}
             className={inputClass}

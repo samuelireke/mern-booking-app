@@ -42,18 +42,12 @@ const StarRating = () => {
           </button>
         ))}
         {ratingValue && (
-          <span className="ml-2 text-sm text-gray-600">({ratingValue})</span>
+          <span className="ml-2 text-sm text-gray-600">({ratingValue} )</span>
         )}
       </div>
-      <input
-        type="number"
-        className="hidden"
-        {...register("starRating", {
-          required: "Please select a star rating",
-        })}
-      />
+      <input type="number" className="hidden" {...register("starRating")} />
       {errors.starRating && (
-        <p className="text-sm text-red-600 mt-1">{errors.starRating.message}</p>
+        <p className="text-xs text-red-500 mt-1">{errors.starRating.message}</p>
       )}
     </div>
   );

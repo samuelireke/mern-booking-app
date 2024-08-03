@@ -16,14 +16,10 @@ const GuestsSection = () => {
             type="number"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
             min={1}
-            {...register("adultCount", {
-              required: "This field is required",
-              validate: (value: number) =>
-                value >= 1 || "Adults must be at least 1",
-            })}
+            {...register("adultCount")}
           />
           {errors.adultCount?.message && (
-            <span className="text-sm text-red-600">
+            <span className="text-xs text-red-500 mt-1">
               {errors.adultCount.message}
             </span>
           )}
@@ -34,12 +30,10 @@ const GuestsSection = () => {
             type="number"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
             min={0}
-            {...register("childCount", {
-              required: "This field is required",
-            })}
+            {...register("childCount")}
           />
           {errors.childCount?.message && (
-            <span className="text-sm text-red-600">
+            <span className="text-xs text-red-500 mt-1">
               {errors.childCount.message}
             </span>
           )}

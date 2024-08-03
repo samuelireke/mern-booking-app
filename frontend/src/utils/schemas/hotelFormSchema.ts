@@ -7,18 +7,18 @@ export const HotelFormDataSchema = z.object({
   city: z.string().min(1, "City is required"),
   country: z.string().min(1, "Country is required"),
   description: z.string().min(1, "Description is required"),
-  type: z.string().min(1, "Type is required"),
-  pricePerNight: z.number().min(1, "Price must be at least 1"),
-  starRating: z
+  type: z.string({ message: "Type is required" }),
+  pricePerNight: z.coerce.number().min(1, "Price Per Night is required"),
+  starRating: z.coerce
     .number()
-    .min(1, "Star rating is required")
+    .min(1, "Please select a star rating")
     .max(5, "Star rating must be at most 5"),
-  facilities: z
-    .array(z.string())
-    .nonempty("At least one facility must be selected"),
+  facilities: z.string().array().nonempty({
+    message: "At least one facility must be selected",
+  }),
   imageFiles: z
     .custom<FileList>()
-    .refine((files) => files?.length > 0, "Image is required")
+    .refine((files) => files?.length > 0, "An image is required")
     .refine(
       (files) => files?.length <= 6,
       "Total number of images cannot exceed 6"
@@ -31,6 +31,6 @@ export const HotelFormDataSchema = z.object({
       (files) => files?.[0]?.type.startsWith("image/"),
       "Only image files are allowed."
     ),
-  adultCount: z.number().min(1, "Adults must be at least 1"),
-  childCount: z.number().optional(),
+  adultCount: z.coerce.number().min(1, "Adults must be at least 1"),
+  childCount: z.coerce.number().optional(),
 });

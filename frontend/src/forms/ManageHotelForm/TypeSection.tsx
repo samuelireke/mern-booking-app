@@ -30,7 +30,7 @@ const TypeSection = () => {
               <input
                 type="radio"
                 value={type}
-                {...register("type", { required: "This field is required" })}
+                {...register("type")}
                 className="hidden"
               />
               <span>{type}</span>
@@ -39,7 +39,7 @@ const TypeSection = () => {
         </div>
       </div>
       {errors.type && (
-        <p className="text-sm text-red-600 mt-2">{errors.type.message}</p>
+        <p className="text-xs text-red-500 mt-1">{errors.type.message}</p>
       )}
     </div>
   );
