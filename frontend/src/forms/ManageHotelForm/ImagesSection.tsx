@@ -1,5 +1,6 @@
 import { useFormContext } from "react-hook-form";
 import { HotelFormData } from "../../utils/types";
+import React from "react";
 
 const ImagesSection = () => {
   const {
@@ -12,7 +13,7 @@ const ImagesSection = () => {
   const existingImageUrls = watch("imageUrls");
 
   const handleDelete = (
-    event: React.MouseEventHandler<HTMLButtonElement>,
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     imageUrl: string
   ) => {
     event.preventDefault();
