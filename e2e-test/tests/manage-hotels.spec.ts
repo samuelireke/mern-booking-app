@@ -73,35 +73,33 @@ test("should allow user to add a hotel", async ({ page }) => {
 
   await page.getByRole("button", { name: "Save" }).click();
 
-  await expect(page.getByText("Hotel Saved")).toBeVisible();
+  await expect(page.getByText("Hotel Saved!")).toBeVisible();
 });
 
 test("should display hotels", async ({ page }) => {
   await page.goto(`${UI_URL}/my-hotels`);
 
   //assert hotel name
-  await expect(
-    page.getByText(validHotelInput.name, { exact: true })
-  ).toBeVisible();
+  await expect(page.getByText(validHotelInput.name).first()).toBeVisible();
   //assert hotel description
   await expect(
-    page.getByText(validHotelInput.description, { exact: true })
+    page.getByText(validHotelInput.description).first()
   ).toBeVisible();
   //assert hotel city and country
-  await expect(page.getByText(validHotelInput.city)).toBeVisible();
-  await expect(page.getByText(validHotelInput.country)).toBeVisible();
+  await expect(page.getByText(validHotelInput.city).first()).toBeVisible();
+  await expect(page.getByText(validHotelInput.country).first()).toBeVisible();
   //assert hotel price per night
   await expect(
-    page.getByText(`£${validHotelInput.pricePerNight} per night`, {
-      exact: true,
-    })
+    page.getByText(`£${validHotelInput.pricePerNight} per night`).first()
   ).toBeVisible();
   //assert hotel star rating
   await expect(
-    page.getByText(`${validHotelInput.starRating} Star Rating`, { exact: true })
+    page.getByText(`${validHotelInput.starRating} Star Rating`).first()
   ).toBeVisible();
   //assert Links
-  await expect(page.getByRole("link", { name: "View Details" })).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "View Details" }).first()
+  ).toBeVisible();
   await expect(page.getByRole("link", { name: "Add Hotel" })).toBeVisible();
 });
 
@@ -118,4 +116,27 @@ test("should redirect user to add hotel page when Add Hotel Link in My Hotels pa
   await expect(page.getByLabel("Name")).toBeVisible();
   await expect(page.getByLabel("City")).toBeVisible();
   await expect(page.getByRole("button", { name: "Save" })).toBeVisible();
+});
+
+test("should edit hotel", async ({ page }) => {
+  await page.goto(`${UI_URL}/my-hotels`);
+
+  // click view details link
+  await page.getByRole("link", { name: "View Details" }).first().click();
+
+  await page.waitForSelector('[name="name"]', { state: "attached" });
+  // assert page displays valid Hotel name
+  await expect(page.locator('[name="name"]')).toHaveValue(validHotelInput.name);
+  //update hotel name and assert it has been updated
+  await page.locator('[name="name"]').fill("Updated Test Hotel");
+  await page.getByRole("button", { name: "Save" }).click();
+  await expect(page.getByText("Hotel Saved!")).toBeVisible();
+
+  // Refresh the page
+  await page.reload();
+  await expect(page.locator('[name="name"]')).toHaveValue("Updated Test Hotel");
+
+  //Reset the page
+  await page.locator('[name="name"]').fill(validHotelInput.name);
+  await page.getByRole("button", { name: "Save" }).click();
 });

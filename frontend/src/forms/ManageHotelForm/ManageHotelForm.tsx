@@ -8,13 +8,15 @@ import { HotelFormDataSchema } from "../../utils/schemas/hotelFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HotelFormData } from "../../utils/types";
 import { useEffect } from "react";
+import { HotelType } from "../../../../backend/src/shared/types";
 
 type Props = {
+  hotel?: HotelType;
   onSave: (hotelFormData: FormData) => void;
   isLoading: boolean;
 };
 
-const ManageHotelForm = ({ onSave, isLoading }: Props) => {
+const ManageHotelForm = ({ onSave, isLoading, hotel }: Props) => {
   // Set default form values for starRating and facilities
   const defaultValues = {
     starRating: 3,
@@ -31,17 +33,22 @@ const ManageHotelForm = ({ onSave, isLoading }: Props) => {
     formState: { isSubmitSuccessful },
   } = formMethods;
 
+  useEffect(() => {
+    reset(hotel);
+  }, [hotel, reset]);
+
   const onSubmit = handleSubmit((formDataJson: HotelFormData) => {
     console.log(formDataJson);
 
     const formData = new FormData();
 
+    if (hotel) {
+      formData.append("hotelId", hotel._id);
+    }
     // Add string and number fields to FormData as strings
     Object.entries(formDataJson).forEach(([key, value]) => {
       if (typeof value !== "object") {
         formData.append(key, value.toString());
-      } else {
-        console.log(key, typeof value);
       }
     });
     // Append facilities array
@@ -49,11 +56,15 @@ const ManageHotelForm = ({ onSave, isLoading }: Props) => {
       formData.append(`facilities[${index}]`, facility);
     });
 
+    if (formDataJson.imageUrls) {
+      formDataJson.imageUrls.forEach((url, index) => {
+        formData.append(`imageUrls[${index}]`, url);
+      });
+    }
     // Append images
     Array.from(formDataJson.imageFiles).forEach((imageFile) => {
       formData.append("imageFiles", imageFile);
     });
-    console.log(isSubmitSuccessful);
 
     onSave(formData);
   });
