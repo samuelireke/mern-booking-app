@@ -1,6 +1,8 @@
 import { FormEvent, useState } from "react";
 import { useSearchContext } from "../contexts/SearchContext";
 import { MdTravelExplore } from "react-icons/md";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const SearchBar = () => {
   const search = useSearchContext();
@@ -20,6 +22,9 @@ const SearchBar = () => {
       childCount
     );
   };
+  const minDate = new Date();
+  const maxDate = new Date();
+  maxDate.setFullYear(maxDate.getFullYear() + 1);
   return (
     <form
       onSubmit={handleSubmit}
@@ -32,6 +37,56 @@ const SearchBar = () => {
           className="text-md w-full focus:outline-none"
           value={destination}
           onChange={(event) => setDestination(event.target.value)}
+        />
+      </div>
+
+      <div className="flex bg-white px-2 py-1 gap-2">
+        <label className="items-center flex">
+          Adults:
+          <input
+            className="w-full p-1 focus:outline-none font-bold"
+            min={1}
+            max={20}
+            value={adultCount}
+            onChange={(event) => setAdultCount(parseInt(event.target.value))}
+          />
+        </label>
+        <label className="items-center flex">
+          Children:
+          <input
+            className="w-full p-1 focus:outline-none font-bold"
+            min={0}
+            max={20}
+            value={childCount}
+            onChange={(event) => setChildCount(parseInt(event.target.value))}
+          />
+        </label>
+      </div>
+      <div>
+        <DatePicker
+          selected={checkIn}
+          onChange={(date) => setCheckIn(date as Date)}
+          startDate={checkIn}
+          endDate={checkOut}
+          minDate={minDate}
+          maxDate={maxDate}
+          placeholderText="Check-in Date"
+          className="min-w-full bg-white p-2 focus:outline-none"
+          wrapperClassName="min-w-full"
+        />
+      </div>
+
+      <div>
+        <DatePicker
+          selected={checkOut}
+          onChange={(date) => setCheckIn(date as Date)}
+          startDate={checkOut}
+          endDate={checkOut}
+          minDate={minDate}
+          maxDate={maxDate}
+          placeholderText="Check-in Date"
+          className="min-w-full bg-white p-2 focus:outline-none"
+          wrapperClassName="min-w-full"
         />
       </div>
     </form>
