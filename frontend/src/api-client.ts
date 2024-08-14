@@ -1,4 +1,7 @@
-import { HotelType } from "./../../backend/src/shared/types";
+import {
+  HotelSearchResponse,
+  HotelType,
+} from "./../../backend/src/shared/types";
 import { SignInFormData, RegisterFormData } from "./utils/types/index.d";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
@@ -102,6 +105,39 @@ export const updateMyHotelById = async (
   );
   if (!response.ok) {
     throw new Error("Failed to update hotel");
+  }
+  return response.json();
+};
+
+export type SearchParams = {
+  destination?: string;
+  checkIn?: string;
+  checkOut?: string;
+  adultCount?: string;
+  childCount?: string;
+  page?: string;
+};
+
+export const searchHotels = async (
+  searchHotelsParams: SearchParams
+): Promise<HotelSearchResponse> => {
+  const queryParams = new URLSearchParams();
+  queryParams.append("destination", searchHotelsParams.destination || "");
+  queryParams.append("checkIn", searchHotelsParams.checkIn || "");
+  queryParams.append("checkOut", searchHotelsParams.checkOut || "");
+  queryParams.append("adultCount", searchHotelsParams.adultCount || "");
+  queryParams.append("childCount", searchHotelsParams.childCount || "");
+  queryParams.append("page", searchHotelsParams.page || "");
+
+  const response = await fetch(
+    `${API_BASE_URL}/api/hotels/search?${queryParams}`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Error fetching hotels");
   }
   return response.json();
 };
