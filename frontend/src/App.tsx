@@ -21,7 +21,6 @@ const App = () => {
           path="/search"
           element={
             <Layout>
-              {" "}
               <Search />
             </Layout>
           }
