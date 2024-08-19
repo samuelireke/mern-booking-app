@@ -41,6 +41,7 @@ export const fetchHotels = async (req: Request, res: Response) => {
 
 // fetch hotel by id
 export const fetchHotelById = async (req: Request, res: Response) => {
+  console.log(req.body);
   const id = req.params.id.toString();
   try {
     const hotel = await Hotel.findOne({
